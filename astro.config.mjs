@@ -4,10 +4,10 @@ import sitemap from '@astrojs/sitemap';
 import react from '@astrojs/react';
 import icon from 'astro-icon';
 import tailwindcss from '@tailwindcss/vite';
-import vercel from '@astrojs/vercel';
+import cloudflare from '@astrojs/cloudflare';
 
 export default defineConfig({
-  adapter: vercel(),
+  adapter: cloudflare(),
   site: process.env.SITE_URL || 'https://fschmidt.dev',
 
   env: {
