@@ -1,49 +1,154 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import LandingLayout from '@/layouts/LandingLayout.astro';
+import { Hero } from '@/components/hero';
+import Button from '@/components/ui/form/Button/Button.astro';
+import Badge from '@/components/ui/data-display/Badge/Badge.astro';
+import Card from '@/components/ui/data-display/Card/Card.astro';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+import BlogCard from '@/components/blog/BlogCard.astro';
+import { getCollection } from 'astro:content';
+import siteConfig from '@/config/site.config';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => {
+    if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
+    return b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf();
+  })
+  .slice(0, 3);
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This template
-				serves as a lightweight, minimally-styled starting point for anyone looking to build a personal
-				website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
-</html>
+<LandingLayout
+  title="Architect's Notebook — Frédéric Schmidt"
+  description="Software architect sharing real-world experiences in architecture, platform engineering and technical decisions."
+  image="/og-default.svg"
+  includePersonSchema={true}
+>
+  <!-- Hero -->
+  <Hero layout="centered" size="xl" class="hero-dark-gradient">
+    <h1 slot="title">
+      <span class="text-foreground [-webkit-text-fill-color:currentColor]">Frédéric Schmidt —</span><br />
+      <span class="text-brand-500 [-webkit-text-fill-color:var(--color-brand-500)] dark:text-foreground dark:[-webkit-text-fill-color:currentColor]">Software Architect</span>
+    </h1>
+
+    <p slot="description">
+      30 years of experience building software, leading technical decisions, and designing platforms that last.
+      This is my architect’s notebook — real decisions, real tradeoffs, real experiences.
+    </p>
+
+    <Fragment slot="actions">
+      <Button size="lg" href="/blog">
+        <Icon name="book" size="sm" />
+        Read the articles
+      </Button>
+      <Button size="lg" variant="outline" href="/about">
+        About me
+        <Icon name="arrow-right" size="sm" />
+      </Button>
+    </Fragment>
+  </Hero>
+
+  <!-- About teaser -->
+  <section class="relative z-10 py-[var(--space-section-md)] bg-background-secondary border-t border-border">
+    <div class="mx-auto max-w-6xl px-6">
+      <div class="grid gap-12 lg:grid-cols-2">
+        <div class="flex flex-col justify-center" data-reveal>
+          <div class="flex flex-col gap-6 mb-6">
+            <Badge variant="brand" pill class="self-start">About me</Badge>
+            <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground">
+              Architect, not just<br />
+              <span class="text-brand-500">a developer.</span>
+            </h2>
+          </div>
+          <p class="text-lg text-foreground-muted leading-relaxed mb-4">
+            My work focuses on platform engineering — building internal developer platforms, authentication infrastructure, and the tools that help teams ship better software.
+            I work across AWS, Azure, and on-premise environments, with technologies like Backstage, .NET, Keycloak, and Kubernetes in production.
+          </p>
+          <p class="text-lg text-foreground-muted leading-relaxed mb-8">
+            Beyond the platform, I ensure architectural consistency across teams and support projects outside the platform.
+          </p>
+          <Button variant="outline" href="/about" class="self-start">
+            More about me
+          </Button>
+        </div>
+        <Card variant="elevated" padding="lg" class="h-full flex flex-col" data-reveal data-reveal-delay="1">
+          <p class="text-sm text-foreground mb-5 text-center">A few things about me.</p>
+          <div class="grid grid-cols-2 gap-3 flex-1 auto-rows-fr">
+            <div class="bg-background-tertiary rounded-xl p-5 flex flex-col items-center justify-center text-center gap-2 border-t-2 border-brand-500/40 transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:border-brand-500 cursor-default h-full">
+              <Icon name="history" class="w-10 h-10 text-brand-500" />
+              <p class="text-sm font-semibold text-foreground">30 Years Experience</p>
+            </div>
+            <div class="bg-background-tertiary rounded-xl p-5 flex flex-col items-center justify-center text-center gap-2 border-t-2 border-brand-500/40 transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:border-brand-500 cursor-default h-full">
+              <Icon name="layers" class="w-10 h-10 text-brand-500" />
+              <p class="text-sm font-semibold text-foreground">Platform Engineering</p>
+            </div>
+            <div class="bg-background-tertiary rounded-xl p-5 flex flex-col items-center justify-center text-center gap-2 border-t-2 border-brand-500/40 transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:border-brand-500 cursor-default h-full">
+              <Icon name="cloud" class="w-10 h-10 text-brand-500" />
+              <p class="text-sm font-semibold text-foreground">AWS & Azure</p>
+            </div>
+            <div class="bg-background-tertiary rounded-xl p-5 flex flex-col items-center justify-center text-center gap-2 border-t-2 border-brand-500/40 transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:border-brand-500 cursor-default h-full">
+              <Icon name="map-pin" class="w-10 h-10 text-brand-500" />
+              <p class="text-sm font-semibold text-foreground">Based in<br />Alsace, France</p>
+            </div>
+          </div>
+        </Card>
+      </div>
+    </div>
+  </section>
+
+  <!-- Latest Articles -->
+  {posts.length > 0 && (
+    <section class="relative z-10 py-[var(--space-section-md)] bg-background border-t border-border">
+      <div class="mx-auto max-w-6xl px-6 flex flex-col gap-8">
+        <div class="flex items-end justify-between" data-reveal>
+          <div class="flex flex-col gap-6">
+            <Badge variant="brand" pill class="self-start">Latest</Badge>
+            <h2 class="font-display text-3xl md:text-4xl font-bold text-foreground">
+              Recent articles
+            </h2>
+          </div>
+          <a href="/blog" class="hidden sm:inline-flex items-center gap-1.5 text-sm font-medium text-brand-500 hover:text-brand-600 transition-colors shrink-0">
+            View all articles
+            <Icon name="arrow-right" size="sm" />
+          </a>
+        </div>
+
+        <div class="grid gap-6 md:grid-cols-3" data-reveal data-reveal-delay="1">
+          {posts.map((post) => (
+            <BlogCard
+              title={post.data.title}
+              description={post.data.description}
+              href={`/blog/${post.id.replace('en/', '')}`}
+              publishedAt={post.data.publishedAt}
+              tags={post.data.tags}
+              author={post.data.author}
+              image={post.data.image}
+              svgSlug={post.data.svgSlug}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- CTA -->
+  <section class="relative z-10 py-[var(--space-section-md)] bg-background-secondary border-t border-border">
+    <div class="mx-auto max-w-2xl px-6 text-center" data-reveal>
+      <h2 class="font-display text-4xl font-bold text-foreground mb-4 text-balance">
+        Want to get in touch?
+      </h2>
+      <p class="text-lg text-foreground-muted mb-8 text-balance">
+        I’m always open to a good conversation about architecture, platform engineering, or technical decisions.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <Button size="lg" href="/contact">
+          Contact me
+          <Icon name="arrow-right" size="sm" />
+        </Button>
+        <Button size="lg" variant="outline" href="/about">
+          More about me
+        </Button>
+      </div>
+    </div>
+  </section>
+
+</LandingLayout>
