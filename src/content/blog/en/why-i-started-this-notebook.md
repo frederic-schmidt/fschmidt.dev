@@ -4,6 +4,7 @@ description: "After thirty years in the engine room, I'm finally writing things 
 publishedAt: 2026-05-05
 author: "Frédéric Schmidt"
 tags: ["meta", "career"]
+svgSlug: "why-i-started-this-notebook"
 draft: false
 featured: true
 locale: "en"
